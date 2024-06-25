@@ -101,11 +101,33 @@
             padding: 10px 20px;
             font-size: 16px;
         }
+        .alphabet-index {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .alphabet-index a {
+            margin: 5px;
+            padding: 10px;
+            text-decoration: none;
+            color: white;
+            background-color: #000;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
 
 <h1>Protege Dot - Lista de Palavras BIP39 com Gabarito de Marcação</h1>
+
+<div class="alphabet-index">
+    <!-- Generating alphabet links from A to Z -->
+    <script>
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+        document.write(alphabet.map(letter => `<a href="#${letter}">${letter}</a>`).join(''));
+    </script>
+</div>
 
 <div class="legend-container">
     <div class="legend">
@@ -134,6 +156,8 @@
     function displayWords(words) {
         const container = document.getElementById('wordlist-container');
         container.innerHTML = ''; // Clear previous content
+
+        let currentLetter = ''; // Track current letter section
 
         words.forEach(word => {
             const index = bip39Wordlist.indexOf(word);
@@ -190,6 +214,18 @@
             binaryValueElement.textContent = binaryString.match(/.{1,4}/g).join(' '); // Divide em grupos de 4 bits
 
             wordContainer.appendChild(binaryValueElement);
+            container.appendChild(wordContainer);
+
+            // Add letter section header
+            const firstLetter = word[0].toUpperCase();
+            if (firstLetter !== currentLetter) {
+                currentLetter = firstLetter;
+                const letterHeader = document.createElement('h2');
+                letterHeader.id = currentLetter;
+                letterHeader.textContent = currentLetter;
+                container.appendChild(letterHeader);
+            }
+
             container.appendChild(wordContainer);
         });
     }
