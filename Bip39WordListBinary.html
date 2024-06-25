@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protege Dot Lista de Palavras BIP39 com Gabarito de Marcação </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+        .legend-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .word-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .word-number {
+            width: 50px;
+            text-align: right;
+            margin-right: 10px;
+        }
+        .word {
+            width: 100px;
+            margin-right: 10px;
+        }
+        .binary-group {
+            display: flex;
+            margin-right: 10px;
+        }
+        .binary-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+        }
+        .filled {
+            background-color: #000;
+            color: #fff;
+        }
+        .legend {
+            display: flex;
+        }
+        .legend-box {
+            width: 22px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            font-size: 12px;
+            font-weight: 700;
+            transform: rotate(270deg);
+        }
+        .legend-box-space {
+            width: 2px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            font-size: 12px;
+            transform: rotate(90deg);
+        }
+        .legend-box-space-2 {
+            width: 18px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            font-size: 12px;
+            transform: rotate(90deg);
+        }
+        .binary-value {
+            margin-left: 10px;
+            font-family: monospace;
+        }
+        .input-container {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .input-box {
+            width: 300px;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        .input-button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Protege Dot - Lista de Palavras BIP39 com Gabarito de Marcação</h1>
+
+
+<div class="legend-container">
+    <div class="legend">
+        <div class="legend-box-space-2"></div>
+        <div class="legend-box-space-2"></div>
+        <div class="legend-box">2048</div>
+        <div class="legend-box">1024</div>
+        <div class="legend-box">512</div>
+        <div class="legend-box">256</div>
+        <div class="legend-box-space"></div>
+        <div class="legend-box">128</div>
+        <div class="legend-box">64</div>
+        <div class="legend-box">32</div>
+        <div class="legend-box">16</div>
+        <div class="legend-box-space"></div>
+        <div class="legend-box">8</div>
+        <div class="legend-box">4</div>
+        <div class="legend-box">2</div>
+        <div class="legend-box">1</div>
+    </div>
+</div>
+<div id="wordlist-container"></div>
+
+<script src="bip39.js"></script>
+<script>
+    function displayWords(words) {
+        const container = document.getElementById('wordlist-container');
+        container.innerHTML = ''; // Clear previous content
+
+        words.forEach(word => {
+            const index = bip39Wordlist.indexOf(word);
+            if (index === -1) return; // Skip words not in BIP39 wordlist
+
+            const wordNumber = index + 1;
+            const binaryString = wordNumber.toString(2).padStart(12, '0'); // 2048 is 12 bits
+
+            const wordContainer = document.createElement('div');
+            wordContainer.className = 'word-container';
+
+            const wordNumberElement = document.createElement('div');
+            wordNumberElement.className = 'word-number';
+            wordNumberElement.textContent = wordNumber;
+
+            const wordElement = document.createElement('div');
+            wordElement.className = 'word';
+            wordElement.textContent = word;
+
+            wordContainer.appendChild(wordNumberElement);
+            wordContainer.appendChild(wordElement);
+
+            const binaryBoxes = [];
+
+            for (let i = 0; i < binaryString.length; i++) {
+                const binaryBox = document.createElement('div');
+                binaryBox.className = 'binary-box';
+                if (binaryString[i] === '1') {
+                    binaryBox.classList.add('filled');
+                    binaryBox.textContent = 'o';
+                }
+                binaryBoxes.push(binaryBox);
+            }
+
+            for (let i = 0; i < binaryBoxes.length; i += 4) {
+                const group = document.createElement('div');
+                group.className = 'binary-group';
+                
+                for (let j = 0; j < 4; j++) {
+                    if (i + j < binaryBoxes.length) {
+                        group.appendChild(binaryBoxes[i + j]);
+                    } else {
+                        // Adiciona caixas vazias se necessário
+                        const emptyBox = document.createElement('div');
+                        emptyBox.className = 'binary-box';
+                        group.appendChild(emptyBox);
+                    }
+                }
+                wordContainer.appendChild(group);
+            }
+
+            const binaryValueElement = document.createElement('div');
+            binaryValueElement.className = 'binary-value';
+            binaryValueElement.textContent = binaryString.match(/.{1,4}/g).join(' '); // Divide em grupos de 4 bits
+
+            wordContainer.appendChild(binaryValueElement);
+            container.appendChild(wordContainer);
+        });
+    }
+
+    function displayFullWordlist() {
+        displayWords(bip39Wordlist);
+    }
+
+
+    // Display the full wordlist on initial load
+    displayFullWordlist();
+</script>
+
+</body>
+</html>
