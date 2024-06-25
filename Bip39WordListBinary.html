@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protege Dot Lista de Palavras BIP39 com Gabarito de Marcação </title>
+    <title>Protege Dot Lista de Palavras BIP39 com Gabarito de Marcação</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -107,7 +107,6 @@
 
 <h1>Protege Dot - Lista de Palavras BIP39 com Gabarito de Marcação</h1>
 
-
 <div class="legend-container">
     <div class="legend">
         <div class="legend-box-space-2"></div>
@@ -199,9 +198,23 @@
         displayWords(bip39Wordlist);
     }
 
-
     // Display the full wordlist on initial load
     displayFullWordlist();
+
+    // Disable search, copy, paste and other shortcuts
+    document.addEventListener('keydown', function (e) {
+        if (e.ctrlKey || e.metaKey) {
+            const key = e.key.toLowerCase();
+            if (key === 'f' || key === 'c' || key === 'v' || key === 'x' || key === 'u' || key === 's' || key === 'p') {
+                e.preventDefault();
+            }
+        }
+    });
+
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+    });
 </script>
 
 </body>
